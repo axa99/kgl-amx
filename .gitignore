@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # Ignore catboost_info
-catboost_info/
+catboost_info/*
