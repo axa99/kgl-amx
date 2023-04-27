@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Ignore catboost_info
-catboost_info/*
+# Ignore all files and folders in the catboost_info folder
+catboost_info/
+
