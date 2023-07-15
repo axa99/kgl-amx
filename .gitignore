@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # Ignore all files and folders in the catboost_info folder
-catboost_info/
+
 
 # Ignore log files
 *.log
@@ -138,3 +138,6 @@ catboost_info/
 
 
 
+mlruns/
+data collection and EDA/catboost_info/
+data collection and EDA/catboost_info/tmp/
