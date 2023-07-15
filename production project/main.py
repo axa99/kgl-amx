@@ -6,6 +6,8 @@ import numpy as np
 from pycaret.classification import ClassificationExperiment
 from pathlib import Path
 from rich.logging import RichHandler
+import model_setup
+import mlflow
 
 
 logging.basicConfig(
@@ -97,10 +99,52 @@ def pick_random_sample(train_data, n_train=2000, n_test=1000):
     return train_rndm_sample, test_rndm_sample
 
 
+# drop customer_ID and S_2 from train and test data
+
+
+def drop_customer_id_s2(train_rndm_sample, test_rndm_sample):
+    """
+    Drops customer_ID and S_2 columns from train and test data.
+
+    Args:
+        train_rndm_sample (pd.DataFrame): The train data to be sampled.
+        test_rndm_sample (pd.DataFrame): The test data to be sampled.
+
+    Returns:
+        pd.DataFrame: The train data with customer_ID and S_2 columns dropped.
+        pd.DataFrame: The test data with customer_ID and S_2 columns dropped.
+    """
+    logging.info("Dropping customer_ID and S_2 columns from train and test data")
+    train_rndm_sample = train_rndm_sample.drop(["customer_ID", "S_2"], axis=1)
+    test_rndm_sample = test_rndm_sample.drop(["customer_ID", "S_2"], axis=1)
+    logging.info("Dropped customer_ID and S_2 columns from train and test data")
+    return train_rndm_sample, test_rndm_sample
+
+
 if __name__ == "__main__":
     path = "data/train_data.ftr"
     train_data = load_data(path)
     train_data = sort_train_data(train_data)
     train_rndm_sample, test_rndm_sample = pick_random_sample(
         train_data, n_train=2000, n_test=1000
+    )
+
+    train_rndm_sample, test_rndm_sample = drop_customer_id_s2(
+        train_rndm_sample, test_rndm_sample
+    )
+    # setup the classification experiment
+    cls_model = model_setup.classification_model_setup(
+        train_rndm_sample,
+        target="target",
+        normalize=True,
+        fold=5,
+        feature_selection=True,
+    )
+    compare_models_all = model_setup.compare_models(cls_model, n_select=5)
+
+    # end previous mlflow run
+    mlflow.end_run()
+
+    pred_scores_df = model_setup.get_base_predictions(
+        cls_model, compare_models_all, test_rndm_sample
     )
