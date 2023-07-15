@@ -5,13 +5,14 @@ from collections import Counter
 import numpy as np
 from pycaret.classification import ClassificationExperiment
 from pathlib import Path
-from rich import console
+from rich.logging import RichHandler
 
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[RichHandler()],
 )
 
 
