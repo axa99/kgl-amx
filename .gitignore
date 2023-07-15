@@ -139,5 +139,5 @@ dmypy.json
 
 
 mlruns/
-data collection and EDA/catboost_info/
-data collection and EDA/catboost_info/tmp/
+"data collection and EDA/catboost_info/"
+
