@@ -5,10 +5,16 @@ from collections import Counter
 import numpy as np
 from pycaret.classification import ClassificationExperiment
 from pathlib import Path
-from rich import print
+from rich import console
 
 
-# Load data
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+
 def load_data(path):
     """
     Loads data from a given path.
@@ -19,8 +25,9 @@ def load_data(path):
     Returns:
         pd.DataFrame: The loaded data.
     """
+    logging.info(f"Loading data from {path}")
     data = pd.read_feather(path)
-    print(f"Data loaded from {path} with shape {data.shape}")
+    logging.info(f"Data loaded from {path} with shape {data.shape}")
     return data
 
 
@@ -34,25 +41,27 @@ def sort_train_data(train_data):
     Returns:
         pd.DataFrame: The sorted train data.
     """
+    logging.info("Sorting train data by customer_ID and S_2 columns")
     train_data["S_2"] = pd.to_datetime(train_data["S_2"])
     sorted_train_data = train_data.sort_values(by=["customer_ID", "S_2"])
-
-    print("Train data sorted by customer_ID and S_2 columns")
+    logging.info("Train data sorted by customer_ID and S_2 columns")
     return sorted_train_data
 
 
-# pick random sample of customer_IDs from train_data
 def pick_random_sample(train_data, n_train=2000, n_test=1000):
     """
     Picks a random sample of customer_IDs from train_data.
 
     Args:
         train_data (pd.DataFrame): The train data to be sampled.
-        n (int): The number of customer_IDs to be sampled.
+        n_train (int): The number of customer_IDs to be sampled for training data.
+        n_test (int): The number of customer_IDs to be sampled for test data.
 
     Returns:
-        np.array: The sampled customer_IDs.
+        pd.DataFrame: The sampled train data.
+        pd.DataFrame: The sampled test data.
     """
+    logging.info(f"Picking random sample of {n_train} customer_IDs from train_data")
     np.random.seed(42)
     customer_ID_rand = np.random.choice(
         train_data["customer_ID"], n_train, replace=False
@@ -65,6 +74,9 @@ def pick_random_sample(train_data, n_train=2000, n_test=1000):
     )
 
     # # pick random sample of customer_IDs from customer_ID_not_train
+    logging.info(
+        f"Picking random sample of {n_test} customer_IDs from customer_ID_not_train"
+    )
     customer_ID_test_rnd = np.random.choice(
         customer_ID_not_train, n_test, replace=False
     )
@@ -75,13 +87,13 @@ def pick_random_sample(train_data, n_train=2000, n_test=1000):
     ].sort_values(by=["customer_ID", "S_2"])
 
     # ration of data in train versus test
-    print(
-        f"Ratio of data in train versus test sample is {round(len(train_rndm_sample)/len(test_rndm_sample), 2)}\
-          \nTrain data shape: {train_rndm_sample.shape}\nTest data shape: {test_rndm_sample.shape}"
+    logging.info(
+        f"Ratio of data in train versus test sample is {round(len(train_rndm_sample)/len(test_rndm_sample), 2)}"
     )
+    logging.info(f"Train data shape: {train_rndm_sample.shape}")
+    logging.info(f"Test data shape: {test_rndm_sample.shape}")
 
     return train_rndm_sample, test_rndm_sample
-
 
 
 if __name__ == "__main__":
