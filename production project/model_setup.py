@@ -2,6 +2,7 @@ from pycaret.classification import ClassificationExperiment
 import logging
 import pandas as pd
 import mlflow
+import re
 
 
 # setup the classification experiment
@@ -54,8 +55,9 @@ def get_base_predictions(s, compare_models_all, test_rndm_sample, model_number=0
             y_pred = df_pred["prediction_label"]
             accuracy = (y_true == y_pred).mean()
 
-            model_number += 1
-            mlflow.log_metric(f"{model_number}_accuracy", accuracy)
+            re.sub(r"\s+|\<|\>", "_", model_name)
+            print(model_name)
+            mlflow.log_metric(f"{model_name}_accuracy", accuracy)
             file_path = f"{model_name}_predictions.csv"
             df_pred.to_csv(file_path, index=False)
             mlflow.log_artifact(file_path)
