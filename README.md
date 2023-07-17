@@ -10,7 +10,7 @@ Machine Learning project to predict credit default based on the customer's month
 
 ## Data Pipeline
 
-![Data Pipeline](/documentation/images/data-pipline%2007-12-2023.png)
+![Data Pipeline](/Documentation/images/data-pipline%2007-12-2023.png)
 
 ### Data Pipeline Components
 1. Raw data 
