@@ -142,6 +142,11 @@ if __name__ == "__main__":
     )
     compare_models_all = model_setup.compare_models(cls_model, n_select=5)
 
+    # save the top n best models
+    best_models = model_setup.save_best_models(
+        cls_model, compare_models_all, n_select=3
+    )
+
     # end previous mlflow run
     mlflow.end_run()
 

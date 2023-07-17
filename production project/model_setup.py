@@ -38,14 +38,27 @@ def compare_models(s, n_select=5):
     return compare_models_all
 
 
+# save the top n best models
+def save_best_models(s, compare_models_all, n_select=3):
+    logging.info(f"Saving the top {n_select} best models")
+    best_models = compare_models_all[:n_select]
+    for x in best_models:
+        model_name = str(x).split("(")[0]
+        model_name = re.sub(r"\s+|\<|\>", "_", model_name)
+        logging.info(f"Saving {model_name}")
+        s.save_model(x, f"production project/saved-models/{model_name}")
+    return best_models
+
+
 # get predictions for all models and save the results to a log file
 
 
-def get_base_predictions(s, compare_models_all, test_rndm_sample, model_number=0):
+def get_base_predictions(s, compare_models_all, test_rndm_sample):
     logging.info("Getting predictions for all models")
     with mlflow.start_run(run_name="classification_experiment"):
         for x in compare_models_all:
             model_name = str(x).split("(")[0]
+            model_name = re.sub(r"\s+|\<|\>", "_", model_name)
             logging.info(f"Getting predictions for {model_name}")
             df_pred = s.predict_model(
                 x,
@@ -55,10 +68,8 @@ def get_base_predictions(s, compare_models_all, test_rndm_sample, model_number=0
             y_pred = df_pred["prediction_label"]
             accuracy = (y_true == y_pred).mean()
 
-            re.sub(r"\s+|\<|\>", "_", model_name)
-            print(model_name)
             mlflow.log_metric(f"{model_name}_accuracy", accuracy)
-            file_path = f"{model_name}_predictions.csv"
+            file_path = f"prediction-outputs/{model_name}_predictions.csv"
             df_pred.to_csv(file_path, index=False)
             mlflow.log_artifact(file_path)
 
