@@ -11,9 +11,6 @@ def test_load_data():
     pd.testing.assert_frame_equal(result, test_data)
 
 
-# Add more tests here as needed
-
-
 def test_sort_train_data():
     # Test that the function sorts the train data correctly
     train_data = pd.DataFrame(
@@ -35,6 +32,3 @@ def test_sort_train_data():
     expected_result = expected_result.reset_index(drop=True)
 
     pd.testing.assert_frame_equal(result, expected_result)
-
-
-# Add more tests here as needed
