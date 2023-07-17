@@ -8,11 +8,11 @@ import re
 # setup the classification experiment
 def classification_model_setup(
     train_rndm_sample,
-    target="target",
-    normalize=True,
-    fold=5,
-    feature_selection=True,
-    experiment_name="classification_experiment",
+    target: str = "target",
+    normalize: bool = True,
+    fold: int = 5,
+    feature_selection: bool = True,
+    experiment_name: str = "classification_experiment",
 ):
     logging.info("Setting up the classification experiment")
     s = ClassificationExperiment()
@@ -32,14 +32,14 @@ def classification_model_setup(
     return s
 
 
-def compare_models(s, n_select=5):
+def compare_models(s, n_select: int = 5):
     logging.info(f"Comparing {n_select} models")
     compare_models_all = s.compare_models(n_select=n_select)
     return compare_models_all
 
 
 # save the top n best models
-def save_best_models(s, compare_models_all, n_select=3):
+def save_best_models(s, compare_models_all, n_select: int = 3):
     logging.info(f"Saving the top {n_select} best models")
     best_models = compare_models_all[:n_select]
     for x in best_models:
