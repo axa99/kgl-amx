@@ -30,6 +30,8 @@ Git LFS is used to store the orginal dataset. The CSV file was converted to the 
 
 ## ML Model Lifecycle Management
 
+MLflow is used to track model training, model performance, and model deployment.
+
 
 ### Deployment Method
 
