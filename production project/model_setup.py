@@ -73,10 +73,10 @@ def tune_best_models(s, best_models, n_select: int = 3):
 # get predictions for all models and save the results to a log file
 
 
-def get_base_predictions(s, compare_models_all, test_rndm_sample):
+def get_base_predictions(s, tuned_best_models, test_rndm_sample):
     logging.info("Getting predictions for all models")
     with mlflow.start_run(run_name="classification_experiment"):
-        for x in compare_models_all:
+        for x in tuned_best_models:
             model_name = str(x).split("(")[0]
             model_name = re.sub(r"\s+|\<|\>", "_", model_name)
             logging.info(f"Getting predictions for {model_name}")
