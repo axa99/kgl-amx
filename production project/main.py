@@ -147,6 +147,9 @@ if __name__ == "__main__":
         cls_model, compare_models_all, n_select=3
     )
 
+    # tune the top n best models
+    tuned_best_models = model_setup.tune_best_models(cls_model, best_models, n_select=3)
+
     # end previous mlflow run
     mlflow.end_run()
 

@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 import mlflow
 import re
+import os
 
 
 # setup the classification experiment
@@ -48,6 +49,25 @@ def save_best_models(s, compare_models_all, n_select: int = 3):
         logging.info(f"Saving {model_name}")
         s.save_model(x, f"production project/saved-models/{model_name}")
     return best_models
+
+
+# tune the top n best models
+def tune_best_models(s, best_models, n_select: int = 3):
+    logging.info(f"Tuning the top {n_select} best models")
+    tuned_best_models = []
+    for x in best_models:
+        model_name = str(x).split("(")[0]
+        model_name = re.sub(r"\s+|\<|\>", "_", model_name)
+        logging.info(f"Tuning {model_name}")
+        tuned_best_models.append(s.tune_model(x, tuner_verbose=False))
+
+    # save the tuned models
+    for x in tuned_best_models:
+        model_name = str(x).split("(")[0]
+        model_name = re.sub(r"\s+|\<|\>", "_", model_name)
+        logging.info(f"Saving {model_name}")
+        s.save_model(x, f"production project/saved-models/{model_name}_tuned")
+    return tuned_best_models
 
 
 # get predictions for all models and save the results to a log file
