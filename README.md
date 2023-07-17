@@ -36,8 +36,9 @@ MLflow is used to track model training, model performance, and model deployment.
 ### Deployment Method
 
 The project will be deployed using a combination of **Pycaret** and the **Gradio** library. 
-* Pycaret will be used to train the model 
+* Pycaret will be used for the data preprocessing, model training, and model selection.
 * Gradio will be used to create a web app that will allow users to interact with the model. 
+* FastAPI will be used to create an API that will allow the web app to communicate with the model.
 * The web app will be hosted on **Azure**.
 
 
