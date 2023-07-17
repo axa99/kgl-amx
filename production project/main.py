@@ -8,6 +8,7 @@ from pathlib import Path
 from rich.logging import RichHandler
 import model_setup
 import mlflow
+from api_configuration import start_server
 
 
 logging.basicConfig(
@@ -153,6 +154,11 @@ if __name__ == "__main__":
     # end previous mlflow run
     mlflow.end_run()
 
+    # use the tuned best models to get predictions
+
     pred_scores_df = model_setup.get_base_predictions(
-        cls_model, compare_models_all, test_rndm_sample
+        cls_model, tuned_best_models, test_rndm_sample
     )
+
+    # start the API server
+    start_server()
